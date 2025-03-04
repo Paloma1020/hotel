@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package hotel.modelo;
+package hotel.aplicacion;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -13,12 +13,12 @@ import java.time.temporal.ChronoUnit;
  */
 public class Reserva {
     private static int contadorReservas = 0;
-    private int codigoreserva;
+    private int codigoReserva;
     private Cliente cliente;
     private LocalDate fechaEntrada;
     private LocalDate fechaSalida;
     private TipoHabitacion tipoHabitacion;
-    private boolean CamaSupletoria;
+    private boolean camaSupletoria;
     private double costeTotal;
     
     // Constantes fijas para el precio
@@ -31,12 +31,12 @@ public class Reserva {
         if (!fechaSalida.isAfter(fechaEntrada)) {
             throw new Exception("La fecha de salida debe ser posterior a la de entrada.");
         }
-        this.codigoreserva = obtenerCodigoReserva();
+        this.codigoReserva = obtenerCodigoReserva();
         this.cliente = cliente;
         this.fechaEntrada = fechaEntrada;
         this.fechaSalida = fechaSalida;
         this.tipoHabitacion = tipoHabitacion;
-        this.CamaSupletoria = camaSupletoria;
+        this.camaSupletoria = camaSupletoria;
         this.costeTotal = calcularCosteTotal();
     }
 
@@ -46,12 +46,21 @@ public class Reserva {
         return contadorReservas;
     }
 
+    /**
+     * Metodo calcularCosteTotal
+     * numero de noches, desde la fechaEntrada a fechaSalida
+     * El precioNoche, según el tipoHabitación
+     * Complemento camaSupletoria, SI/NO
+     * Realizamos el calculo final
+     * Añadimos una condición de descuento, si el número de noches supera a 7 se hace un descuento de 10%
+     * @return
+     */
     
     public double calcularCosteTotal() {
         long noches = ChronoUnit.DAYS.between(fechaEntrada, fechaSalida);
         double precioNoche = (tipoHabitacion == TipoHabitacion.DOBLE) ? PRECIODOBLE : PRECIOSUITE;
         
-        if (CamaSupletoria) {
+        if (camaSupletoria) {
             precioNoche += RECARGOCAMASUPLETORIA;
         }
         double total = noches * precioNoche;
@@ -63,18 +72,18 @@ public class Reserva {
 
     
     public String mostrarDetalles() {
-        String detalles = "Código Reserva: " + codigoreserva + "\n" +
+        String detalles = "Código Reserva: " + codigoReserva + "\n" +
                           "Cliente: " + cliente.mostrarInformacion() + "\n" +
                           "Fecha de Entrada: " + fechaEntrada + "\n" +
                           "Fecha de Salida: " + fechaSalida + "\n" +
                           "Tipo de Habitación: " + tipoHabitacion + "\n" +
-                          "Cama Supletoria: " + (CamaSupletoria ? "Sí" : "No") + "\n" +
+                          "Cama Supletoria: " + (camaSupletoria ? "Sí" : "No") + "\n" +
                           "Coste Total: " + costeTotal + "Euros";
         return detalles;
     }
 
     public int getCodigoReserva() {
-        return codigoreserva;
+        return codigoReserva;
     }
 
     public Cliente getCliente() {
@@ -94,7 +103,7 @@ public class Reserva {
     }
 
     public boolean isCamaSupletoria() {
-        return CamaSupletoria;
+        return camaSupletoria;
     }
 
     public double getCosteTotal() {
